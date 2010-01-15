@@ -52,6 +52,11 @@ class JquiTagLib {
         </script>"""
     }
 
+    // TODO
+    def tab = { attrs, body ->
+
+    }
+
     /**
      Layout
     **/
@@ -59,9 +64,28 @@ class JquiTagLib {
         out << "<script type=\"text/javascript\" src=\"${g.resource(dir:'js',file:'jquery/jquery.layout.min-1.2.0.js')}\"></script>\n"
     }
 
+    def borderlayout = { attrs, body ->
+
+    }
+    def north = { attrs, body ->
+
+    }
+    def center = { attrs, body ->
+
+    }
+    def east = { attrs, body ->
+
+    }
+    def west = { attrs, body ->
+
+    }
+    def south = { attrs, body ->
+
+    }
 
     /**
      Tree
+     TODO: next implementation would use jsTree
     **/
     private using_tree() {
         out << "<script type=\"text/javascript\" src=\"${g.resource(dir:'js',file:'jquery/jquery.treeview.min.js')}\"></script>\n"
