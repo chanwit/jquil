@@ -2,13 +2,25 @@ class JquiTagLib {
 
     static namespace = "j"
 
+    static all=['core','tree','layout']
+
     def using = { attrs, body ->
         if(!pageScope.variables.containsKey('jquery')) {
             out << g.javascript(library:"jquery")
             pageScope.jquery = true
         }
-        def lib = attrs.remove("library")
-        "using_${lib}"()
+
+        def libs = attrs.remove("library")
+        if(!libs) libs = attrs.remove("libraries")
+        if(libs.trim() == "all" || libs == "*" ) {
+            all.each { lib ->
+                "using_${lib.trim()}"()
+            }
+        } else {
+            libs?.split(",").each { lib ->
+                "using_${lib.trim()}"()
+            }
+        }
     }
 
     /**

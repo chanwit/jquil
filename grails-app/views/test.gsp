@@ -2,8 +2,7 @@
     <head>
         <title>Welcome to Grails</title>
 		<meta name="layout" content="main" />
-		<j:using library="core"/>
-		<j:using library="tree"/>
+		<j:using library="core,tree"/>
 		<style type="text/css" media="screen">
 			#nav {
 				margin-top:20px;
