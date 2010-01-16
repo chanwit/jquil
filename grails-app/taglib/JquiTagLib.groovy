@@ -31,6 +31,35 @@ class JquiTagLib {
         out << "<link rel=\"stylesheet\" href=\"${resource(dir:'css',file:'themes/base/ui.all.css')}\" />\n"
     }
 
+    def accordion = { attrs, body ->
+        def id = attrs['id']
+        pageScope.parent = "accordion"
+        out << "<div ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << body()
+        out << "</div>"
+        out << """
+        <script type="text/javascript">
+            jQuery(document).ready(function(){
+                jQuery("#${id}").accordion({
+                    animated: false
+                });
+            });
+        </script>"""
+    }
+
+    def panel = { attrs, body ->
+        "panel_${pageScope.parent}"(attrs, body)
+    }
+
+    private panel_accordion(attrs, body) {
+        def caption = attrs['caption']
+        def image   = attrs['image']
+        out << "<h3><a href=\"#\">${caption}</a></h3>"
+        out << "<div><p>"
+        out << body()
+        out << "</p></div>"
+    }
+
     def groupbox = { attrs, body ->
         def id = attrs['id']
         def caption = attrs.remove('caption')
