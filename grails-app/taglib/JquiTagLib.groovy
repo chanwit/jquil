@@ -6,7 +6,7 @@ class JquiTagLib {
 
     def using = { attrs, body ->
         if(!pageScope.variables.containsKey('jquery')) {
-            out << g.javascript(library:"jquery")
+            out << jquery()
             pageScope.jquery = true
         }
 
@@ -21,6 +21,11 @@ class JquiTagLib {
                 "using_${lib.trim()}"()
             }
         }
+    }
+
+    private jquery() {
+        // return g.javascript(library:"jquery")
+        return "<script type=\"text/javascript\" src=\"${g.resource(dir:'js',file:'jquery/jquery-1.4.min.js')}\"></script>\n"
     }
 
     /**
