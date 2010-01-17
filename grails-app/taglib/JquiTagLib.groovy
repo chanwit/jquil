@@ -1,3 +1,5 @@
+import java.util.UUID;
+
 class JquiTagLib {
 
     static namespace = "j"
@@ -37,9 +39,10 @@ class JquiTagLib {
     }
 
     def accordion = { attrs, body ->
-        def id = attrs['id']
+        def id = attrs.remove('id')
+        if(!id) id = "A" + UUID.randomUUID()
         pageScope.parent = "accordion"
-        out << "<div ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << "<div id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
         out << body()
         out << "</div>"
         out << """
@@ -50,6 +53,7 @@ class JquiTagLib {
                 });
             });
         </script>"""
+        pageScope.parent = null
     }
 
     def panel = { attrs, body ->
@@ -66,10 +70,12 @@ class JquiTagLib {
     }
 
     def groupbox = { attrs, body ->
-        def id = attrs['id']
+        def id = attrs.remove('id')
+        if(!id) id = "G" + UUID.randomUUID()
+
         def caption = attrs.remove('caption')
         def image   = attrs.remove('image')
-        out << "<div ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << "<div id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
         out << "<h3><a href=\"#\">${caption}</a></h3>"
         out << "<div><p>"
         out << body()
@@ -99,22 +105,73 @@ class JquiTagLib {
     }
 
     def borderlayout = { attrs, body ->
-
+        pageScope.parent = "borderlayout"
+        pageScope.borderlayout_north  = null
+        pageScope.borderlayout_east   = null
+        pageScope.borderlayout_west   = null
+        pageScope.borderlayout_south  = null
+        pageScope.borderlayout_center = null
+        out << body()
+        out << """
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+	            jQuery('body').layout({
+	                applyDefaultStyles: true
+	                ${paneSelector('north')}
+	                ${paneSelector('west')}
+	                ${paneSelector('east')}
+	                ${paneSelector('south')}
+	                ${paneSelector('center')}
+	            });
+            });
+        </script>"""
+        pageScope.parent = "null"
+    }
+    private paneSelector(pane) {
+        if(pageScope["borderlayout_${pane}"])
+            return ", ${pane}__paneSelector: '#${pageScope["borderlayout_${pane}"]}'"
+        else
+            return ""
     }
     def north = { attrs, body ->
-
+        def id = attrs.remove('id')
+        if(!id) id = "N" + UUID.randomUUID()
+        pageScope.borderlayout_north = id
+        out << "<div id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << body()
+        out << "</div>"
     }
     def center = { attrs, body ->
-
+        def id = attrs.remove('id')
+        if(!id) id = "C" + UUID.randomUUID()
+        pageScope.borderlayout_center = id
+        out << "<div id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << body()
+        out << "</div>"
     }
     def east = { attrs, body ->
-
+        def id = attrs.remove('id')
+        if(!id) id = "E" + UUID.randomUUID()
+        pageScope.borderlayout_east = id
+        out << "<div id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << body()
+        out << "</div>"
     }
     def west = { attrs, body ->
-
+        def id = attrs.remove('id')
+        if(!id) id = "W" + UUID.randomUUID()
+        pageScope.borderlayout_west = id
+        out << "<div id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << body()
+        out << "</div>"
     }
     def south = { attrs, body ->
-
+        def id = attrs.remove('id')
+        if(!id) id = "S" + UUID.randomUUID()
+        pageScope.borderlayout_south = id
+        out << "<div id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << body()
+        out << "</div>"
     }
 
     /**
@@ -127,7 +184,9 @@ class JquiTagLib {
     }
 
     def tree = { attrs, body ->
-        def id = attrs['id']
+        def id = attrs.remove('id')
+        if(!id) id = "T" + UUID.randomUUID()
+
         def persist = attrs.remove('persist')
         if(!persist) persist = "location"
 
@@ -137,7 +196,7 @@ class JquiTagLib {
         def unique = attrs.remove('unique')
         if(!unique) unique = "false"
 
-        out << "<ul ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
+        out << "<ul id=\"${id}\" ${attrs.collect{ k, v -> "$k=\"$v\""}.join(' ')}>"
         out << body()
         out << "</ul>"
         out << """
